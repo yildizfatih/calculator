@@ -7,7 +7,7 @@
     form{
         margin: 20px 0;
     }
-    form input, button{
+    form input, button, select{
         padding: 5px;
     }
     table{
@@ -30,12 +30,15 @@
             var en = $("#en").val();
             var boy = $("#boy").val();
             var yukseklik = $("#yukseklik").val();
+            if (!en || !boy || !yukseklik) {
+              return
+            }
             var markup =  `
-<tr>
+<tr class="minder">
   <td><input type='checkbox' name='record'></td>
-  <td>` + en +  `</td>
-  <td>` + boy +  `</td>
-  <td>` + yukseklik +  `</td>
+  <td "class=en">` + en +  `</td>
+  <td "class=boy">` + boy +  `</td>
+  <td "class=yukseklik">` + yukseklik +  `</td>
 </tr>`;
             $("table tbody").append(markup);
         });
@@ -48,19 +51,45 @@
                 }
             });
         });
+
+        // Calculate
+        $(".calculate").click(function(){
+          var hacim = 0;
+          $("tr.minder").each(function(i, tr) {
+              console.log("bum2")
+              console.log(i)
+              console.log(tr)
+              console.log($(".en", tr).text())
+              var en = $(".en", tr).val();
+              var boy = $("td.boy", tr).val();
+              var yukseklik = $("td.yukseklik", tr).val();
+              console.log(hacim)
+              console.log(en)
+              console.log(boy)
+              console.log(yukseklik)
+              hacim = hacim + (en * boy * yukseklik)
+          });
+          console.log("hey!!!")
+          console.log(hacim)
+          $('p.hacim').text(hacim);
+        });
     });    
 </script>
 </head>
 <body>
     <form>
-        <input type="number" min=0 max=500 id="en" style="width: 100px" placeholder="En (cm)">
-        <input type="number" min=0 max=500 id="boy" style="width: 100px" placeholder="Boy (cm)">
-        <input type="number" min=0 max=50 id="yukseklik" style="width: 100px" placeholder="Yukseklik (cm)">
+        <input type="number" min=25 max=240 id="en" style="width: 100px" placeholder="En (cm)">
+        <input type="number" min=25 max=240 id="boy" style="width: 100px" placeholder="Boy (cm)">
+        <select id="yukseklik">
+          <option value="5">5 cm</option>
+          <option value="8">8 cm</option>
+          <option value="10">10 cm</option>
+        </select>
         <input type="button" class="add-row" value="Minder Ekle">
     </form>
     <table>
         <thead>
-            <tr>
+            <tr class="minder">
                 <th>Sec</th>
                 <th>En (cm)</th>
                 <th>Boy (cm)</th>
@@ -70,8 +99,9 @@
         <tbody>
         </tbody>
     </table>
-    <button type="button" class="delete-row" style="margin-bottom: 10px;"  >Minder Sil</button>
+    <button type="button" class="delete-row" style="margin-bottom: 10px;">Minder Sil</button>
     <br/>
-    <button type="button" class="calculate">Hesapla</button>
+    <button type="button" class="calculate" style="margin-bottom: 10px;">Tahmini Fiyat Hesapla</button>
+    <p id="hacim"></p>
 </body> 
 </html>
